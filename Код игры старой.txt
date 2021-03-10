@@ -1,0 +1,147 @@
+#include <cmath>
+#include <Windows.h> // библиотека для windows forms
+#include <locale>
+#include <stdio.h> // ввод/вывод
+#include <iostream> // объектно-ориентированная иерархия классов (для объектов класса iostream)
+#include <cstdlib> // для использования функций преобразования и обработки строк, rand(), управление памятью,
+#include <math.h>
+#include <cstring> // функции обработки строк
+#include <cstdio> // ввод/вывод
+#include <cctype>// обработка символов (tolower, toupper)
+#include <conio.h>
+
+using namespace std;
+
+
+
+
+void Setup();
+void Draw();
+void InPut();
+void Logic();
+
+bool gameover = false;
+int weight = 20, hight = 20;
+int x, y, fruitX, fruitY, score = 0;
+
+enum eDir { STOP = 0, LEFT, RIGHT, UP, DOWN };
+eDir dir;
+
+
+int main()
+{
+	setlocale(LC_ALL, "rus");
+	SetConsoleOutputCP(1251);
+	SetConsoleCP(1251);
+
+	Setup();
+	while (!gameover) {
+		Draw();
+		InPut();
+		Logic();
+	}
+
+
+	system("pause");
+	return 0;
+}
+
+void Setup() {
+	gameover = false;
+	x = (weight - 2) / 2;
+	y = (hight - 2) / 2;
+	fruitX = rand() % (weight - 2);
+	fruitY = rand() % (hight - 2);
+}
+
+void Draw() {
+
+	system("cls");
+	for (int i = 0; i < (weight); i++) {
+		printf("#");
+	}
+	printf("\n");
+	for (int i = 0; i < (hight - 2); i++) {
+
+		for (int j = 0; j < (weight); j++) {
+
+			if (j == 0 || j == (weight - 1)) printf("#");
+			else if (x == j && y == i) printf("0");
+			else if (fruitX == j && fruitY == i) printf("F");
+			else printf(" ");
+
+
+		}
+
+		printf("\n");
+
+	}
+	if (x == (weight - 1))
+		x = 1;
+	if (x == 0)
+		x = (weight - 1);
+	if (y < 0)
+		y = (hight - 3);
+
+	if (y == (hight - 2))
+		y = 0;
+
+
+
+
+	for (int i = 0; i < (weight); i++) {
+		printf("#");
+	}
+	printf("\n\n\t\t\t* %d *\n\n", score);
+
+	
+}
+
+void InPut() {
+	if (_kbhit()) {
+		switch (_getch()) {
+		case 'a':
+			dir = LEFT;
+			break;
+		case 'd':
+			dir = RIGHT;
+			break;
+		case 'w':
+			dir = UP;
+			break;
+		case 's':
+			dir = DOWN;
+			break;
+		case 'x':
+			gameover = true;
+			break;
+		}
+
+	}
+}
+
+void Logic() {
+
+	switch (dir) {
+	case LEFT:
+		x -= 1;
+		break;
+	case RIGHT:
+		x += 1;
+		break;
+	case UP:
+		y -= 1;
+		break;
+	case DOWN:
+		y += 1;
+		break;
+
+	}
+	if (x == fruitX && y == fruitY) {
+		score += 10;
+		fruitX = rand() % (weight - 2);
+		fruitY = rand() % (hight - 2);
+	}
+
+
+}
